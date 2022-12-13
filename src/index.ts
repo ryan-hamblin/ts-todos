@@ -1,20 +1,20 @@
 import { v4 as uuidV4 } from 'uuid';
-
-type Task = {
+// brushing up on my TS skills by following along with this tutorial https://www.youtube.com/watch?v=jBmrduvKl5w
+type Task = {// defines the shape of our Task type
   id: string,
   title: string,
   completed: boolean,
   createdAt: Date
 }
 
-const list = document.querySelector<HTMLUListElement>('#list');
-const form = document.getElementById('new-task-form') as HTMLFormElement | null;
-const input = document.querySelector<HTMLInputElement>('#new-task-title');
+const list = document.querySelector<HTMLUListElement>('#list'); // selects our list
+const form = document.getElementById('new-task-form') as HTMLFormElement | null; // selects our form
+const input = document.querySelector<HTMLInputElement>('#new-task-title'); // selects our input
 
-const tasks: Task[] = loadTasks();
-tasks.forEach(addListItem);
+const tasks: Task[] = loadTasks();// grabs tasks out of local storage for browser persistence.
+tasks.forEach(addListItem);// builds our UI from the tasks array.
 
-form?.addEventListener('submit', e => {
+form?.addEventListener('submit', e => {// pushes new tasks into the array, wipes input field, and persists to local storage
   e.preventDefault();
 
   if(input?.value == '' || input?.value == null) return;
@@ -32,8 +32,9 @@ form?.addEventListener('submit', e => {
   input.value = "";
 });
 
-form?.addEventListener('click', e => {
+form?.addEventListener('click', e => {// event listener for our 'remove' todos that have been completed.
   const completedTasks = tasks.filter(task => {
+    // TODO: bug where page needs to refresh to show new list
     return task.completed === false;
   });
   localStorage.setItem("TASKS", JSON.stringify(completedTasks));
@@ -41,6 +42,7 @@ form?.addEventListener('click', e => {
 });
 
 function addListItem(task: Task) {
+  // this is the whole task creation system. Grabs all our inputs and builds our tasks out the way we want em.
   const item = document.createElement('li');
   const label = document.createElement('label');
   const checkbox = document.createElement('input');
@@ -56,6 +58,7 @@ function addListItem(task: Task) {
 }
 
 function saveTasks() {
+  // persisting in local storage.
   localStorage.setItem("TASKS", JSON.stringify(tasks));
 }
 
